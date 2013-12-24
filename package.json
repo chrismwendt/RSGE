@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "mongoose": "~3.8.3",
+    "underscore": "~1.5.2",
+    "async": "~0.2.9",
+    "request": "~2.30.0"
+  }
+}
