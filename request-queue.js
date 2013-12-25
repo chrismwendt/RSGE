@@ -1,6 +1,5 @@
 var __ = require('underscore');
 var request = require('request');
-//request = require('./request-proxy'); // for development without an Internet connection
 
 exports.minDelay = 1/16*1000;
 exports.maxDelay = 16*1000;
@@ -20,14 +19,11 @@ var scheduleNext = function() {
 };
 var handler = function(startTime, error, response) {
     if (error || !response.body) { 
-        //console.log('F');
-        //console.log(error);
         delay = Math.min(delay*2, exports.maxDelay);
         scheduleNext();
         return;
     }
 
-    //console.log('.');
     queue[0].callback(response, startTime);
     queue.shift();
 
