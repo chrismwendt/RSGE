@@ -9,6 +9,12 @@ app.get('/', function(request, response) {
     response.send('hello, world');
 });
 
-app.listen(port, function() {
-    console.log('Listening on port ' + port);
-});
+var main = function() {
+    app.listen(port, function() {
+        console.log('Listening on port ' + port);
+    });
+}
+
+if (require.main === module) {
+    main();
+}
