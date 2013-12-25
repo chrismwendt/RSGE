@@ -40,6 +40,40 @@ var wrap = function(uri, wrapCallback) {
     ]);
 }
 
+var createItem = function(newItem, timestamp, errorCallback) {
+    Item.create({
+        id: newItem.id,
+        name: newItem.name,
+        priceHistory: [ {
+                timestamp: timestamp,
+                price: rsNumber.toInt(newItem.current.price)
+            }
+        ]
+    }, function(error, document) {
+        if (error) {
+            console.log('Error creating item ID ' + newItem.id + ': ' + error);
+            errorCallback();
+        }
+    });
+}
+
+var updateItem = function(item, newItem, timestamp, errorCallback) {
+    item.update({
+        $pushAll: {
+            priceHistory: [ {
+                    timestamp: timestamp,
+                    price: rsNumber.toInt(newItem.current.price)
+                }
+            ]
+        }
+    }, function(error) {
+        if (error) {
+            console.log('Error updating item ID ' + newItem.id + ': ' + error);
+            errorCallback();
+        }
+    });
+}
+
 var main = function() {
     wrap('mongodb://localhost/' + databaseName, function(db, callback) {
         itemFetcher.itemStream(function(item, timestamp) {
@@ -53,35 +87,9 @@ var main = function() {
                 console.log('Adding: ' + item.name + ' ' + item.current.price);
                 if (!existingItem) {
                     console.log(item.name + ' is a new item!');
-                    Item.create({
-                        id: item.id,
-                        name: item.name,
-                        priceHistory: [ {
-                                timestamp: timestamp,
-                                price: rsNumber.toInt(item.current.price)
-                            }
-                        ]
-                    }, function(error, document) {
-                        if (error) {
-                            console.log('Error creating item ID ' + item.id + ': ' + error);
-                            callback();
-                        }
-                    });
+                    createItem(item, timestamp, callback);
                 } else {
-                    existingItem.update({
-                        $pushAll: {
-                            priceHistory: [ {
-                                    timestamp: timestamp,
-                                    price: rsNumber.toInt(item.current.price)
-                                }
-                            ]
-                        }
-                    }, function(error) {
-                        if (error) {
-                            console.log('Error updating item ID ' + item.id + ': ' + error);
-                            callback();
-                        }
-                    });
+                    updateItem(existingItem, item, timestamp, callback);
                 }
             });
         });
