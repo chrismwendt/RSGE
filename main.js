@@ -6,12 +6,13 @@ var databaseName = 'rs';
 var collectionName = 'ge';
 
 var Item = mongoose.model('Item', {
-        id: Number,
-        name: String,
-        priceHistory: {
+    id: Number,
+    name: String,
+    priceHistory: [ {
             timestamp: Date,
-        price: Number
-    }
+            price: Number
+        }
+    ]
 });
 
 var wrap = function(uri, callback) {
