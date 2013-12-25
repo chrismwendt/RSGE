@@ -4,7 +4,7 @@ var rsNumber = require('./rs-number');
 var itemFetcher = require('./itemFetcher');
 var _ = require('underscore');
 
-var databaseName = 'rs';
+var databaseURI = processenv.MONGOLAB_URI || 'mongodb://localhost/rsge';
 
 var Item = mongoose.model('Item', {
     id: Number,
@@ -75,7 +75,7 @@ var updateItem = function(item, newItem, timestamp, errorCallback) {
 }
 
 var main = function() {
-    wrap('mongodb://localhost/' + databaseName, function(db, callback) {
+    wrap(databaseURI, function(db, callback) {
         itemFetcher.itemStream(function(item, timestamp) {
             Item.findOne({
                 id: item.id
