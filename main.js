@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var async = require('async');
 var rsNumber = require('./rs-number');
 var itemFetcher = require('./itemFetcher');
+var _ = require('underscore');
 
 var databaseName = 'rs';
 
@@ -15,22 +16,28 @@ var Item = mongoose.model('Item', {
     ]
 });
 
-var wrap = function(uri, callback) {
+var wrap = function(uri, wrapCallback) {
     mongoose.connect(uri);
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function() {
-        console.log('Connected to ' + uri + '.');
-        console.log('Opened ' + uri + '.');
-        callback(db, function() {
-            db.close(function() {
-                console.log('Closed ' + uri + '.');
-                mongoose.disconnect(function() {
-                    console.log('Disconnected from ' + uri + '.');
-                });
-            });
-        });
-    });
+    async.series([
+        _.partial(_.bind(db.once, db), 'open'),
+        function(callback) {
+            console.log('Connected to ' + uri + '.');
+            console.log('Opened ' + uri + '.');
+            callback();
+        },
+        _.partial(wrapCallback, db),
+        function(callback) {
+            console.log('Closed ' + uri + '.');
+            callback();
+        },
+        _.bind(mongoose.disconnect, mongoose),
+        function(callback) {
+            console.log('Disconnected from ' + uri + '.');
+            callback();
+        }
+    ]);
 }
 
 var main = function() {
