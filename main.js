@@ -4,7 +4,6 @@ var rsNumber = require('./rs-number');
 var itemFetcher = require('./itemFetcher');
 
 var databaseName = 'rs';
-var collectionName = 'ge';
 
 var Item = mongoose.model('Item', {
     id: Number,
