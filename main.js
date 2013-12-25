@@ -45,13 +45,13 @@ var main = function() {
         itemFetcher.itemStream(function(item, timestamp) {
             Item.findOne({
                 id: item.id
-            }, function(error, itemi) {
+            }, function(error, existingItem) {
                 if (error) {
                     console.log('Error finding item ID ' + item.id + ': ' + error);
                     callback();
                 }
                 console.log('Adding: ' + item.name + ' ' + item.current.price);
-                if (!itemi) {
+                if (!existingItem) {
                     console.log(item.name + ' is a new item!');
                     Item.create({
                         id: item.id,
@@ -68,7 +68,7 @@ var main = function() {
                         }
                     });
                 } else {
-                    itemi.update({
+                    existingItem.update({
                         $pushAll: {
                             priceHistory: [ {
                                     timestamp: timestamp,
