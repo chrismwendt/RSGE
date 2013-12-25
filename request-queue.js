@@ -16,7 +16,7 @@ exports.drain = undefined;
 var queue = [];
 var delay = exports.minDelay;
 var scheduleNext = function() {
-    __.delay(__(request).partial(queue[0].url, __(handler).partial(Date.now())), delay);
+    __.delay(__(request).partial(queue[0].url, __(handler).partial(Date())), delay);
 };
 var handler = function(startTime, error, response) {
     if (error || !response.body) { 
