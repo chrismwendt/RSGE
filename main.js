@@ -21,7 +21,7 @@ var wrap = function(uri, callback) {
     db.once('open', function() {
         console.log('Connected to ' + uri + '.');
         console.log('Opened ' + uri + '.');
-        callback(function() {
+        callback(db, function() {
             db.close(function() {
                 console.log('Closed ' + uri + '.');
                 mongoose.disconnect(function() {
@@ -33,7 +33,7 @@ var wrap = function(uri, callback) {
 }
 
 var main = function() {
-    wrap('mongodb://localhost/' + databaseName, function(callback) {
+    wrap('mongodb://localhost/' + databaseName, function(db, callback) {
         console.log('insert prices');
         callback();
     });
