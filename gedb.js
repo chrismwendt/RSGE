@@ -4,7 +4,7 @@ var rsNumber = require('./rs-number');
 var itemFetcher = require('./itemFetcher');
 var _ = require('underscore');
 
-var databaseURI = processenv.MONGOLAB_URI || 'mongodb://localhost/rsge';
+var databaseURI = process.env.MONGOLAB_URI || 'mongodb://localhost/rsge';
 
 var Item = mongoose.model('Item', {
     id: Number,
