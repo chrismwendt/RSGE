@@ -59,12 +59,14 @@ var createItem = function(newItem, timestamp, errorCallback) {
 
 var updateItem = function(item, newItem, timestamp, errorCallback) {
     item.update({
-        $pushAll: {
-            priceHistory: [ {
-                    timestamp: timestamp,
-                    price: rsNumber.toInt(newItem.current.price)
-                }
-            ]
+        $addToSet: {
+            priceHistory: {
+                $each: [ {
+                        timestamp: timestamp,
+                        price: rsNumber.toInt(newItem.current.price)
+                    }
+                ]
+            }
         }
     }, function(error) {
         if (error) {
