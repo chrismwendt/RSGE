@@ -5,6 +5,15 @@ var rsNumber = require('./rs-number');
 var databaseName = 'rs';
 var collectionName = 'ge';
 
+var Item = mongoose.model('Item', {
+        id: Number,
+        name: String,
+        priceHistory: {
+            timestamp: Date,
+        price: Number
+    }
+});
+
 var wrap = function(uri, callback) {
     mongoose.connect(uri);
     var db = mongoose.connection;
