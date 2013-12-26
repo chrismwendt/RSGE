@@ -11,7 +11,11 @@ var Item = mongoose.model('Item', {
     name: String,
     priceHistory: [ {
             timestamp: Date,
-            price: Number
+            price: Number,
+            volume: {
+                type: Number,
+                required: false
+            }
         }
     ]
 });
